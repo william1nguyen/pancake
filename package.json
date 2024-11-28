@@ -1,0 +1,64 @@
+{
+  "name": "typescript-template-tsup",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "TS backend template powered by tsup",
+  "author": "William Nguyen",
+  "license": "UNLICENSED",
+  "lint-staged": {
+    "*.{ts, tsx, js,css,md}": "prettier --write"
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/prompt"
+    }
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "clean": "rm -rf ./dist",
+    "dev": "npm run build && npm start",
+    "build": "tsup",
+    "start": "node --enable-source-maps dist/index.js",
+    "watch": "tsup --watch",
+    "watch:start": "tsup --watch --onSuccess \"npm start\"",
+    "lint": "npx @biomejs/biome check src",
+    "lint:fix": "npx @biomejs/biome check --apply src",
+    "test": "vitest"
+  },
+  "tsup": {
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "esm"
+    ],
+    "sourcemap": true,
+    "clean": true,
+    "shims": true
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
+    "@commitlint/prompt": "^17.7.1",
+    "@types/node": "^18.17.5",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
+    "cross-env": "^7.0.3",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.0",
+    "prettier": "^3.0.1",
+    "tsup": "^7.2.0",
+    "typescript": "^5.1.6",
+    "vite": "^4.4.9",
+    "vitest": "^0.34.1"
+  },
+  "dependencies": {
+    "@biomejs/biome": "^1.7.3",
+    "@sentry/node": "^7.63.0",
+    "@sentry/tracing": "^7.63.0",
+    "dotenv": "^16.3.1",
+    "pino": "^8.15.0",
+    "pino-pretty": "^10.2.0"
+  }
+}
