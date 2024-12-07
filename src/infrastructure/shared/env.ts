@@ -22,6 +22,8 @@ const EnvSchema = Type.Object({
   DATABASE_URL: Type.String(),
   DATABASE_MAX_CONNECTIONS: Type.Number(),
   DATABASE_IDLE_TIMEOUT_MS: Type.Number(),
+
+  HANDLER_API_URL: Type.String(),
 });
 
 type Env = Static<typeof EnvSchema>;
@@ -49,6 +51,8 @@ const validateEnv = (): Env => {
     DATABASE_URL: process.env.DATABASE_URL,
     DATABASE_MAX_CONNECTIONS: coerceInt(process.env.DATABASE_MAX_CONNECTIONS),
     DATABASE_IDLE_TIMEOUT_MS: coerceInt(process.env.DATABASE_IDLE_TIMEOUT_MS),
+
+    HANDLER_API_URL: process.env.HANDLER_API_URL,
   };
 
   if (!validator.Check(env)) {
