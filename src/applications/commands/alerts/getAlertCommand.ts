@@ -12,7 +12,6 @@ import {
   createResponse,
 } from "~/infrastructure/discord/messageHandler";
 import { env } from "~/infrastructure/shared/env";
-import logger from "~/infrastructure/shared/logger";
 
 const command = new SlashCommandBuilder()
   .setName("get")
@@ -48,12 +47,13 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
     };
     const res = await axios.get(url, { headers });
     const alerts = res.data.alerts as Alert[];
+
     const botResponse = createListResponse(
       alerts.filter((alert) => alert.alert_id === alertId),
     );
+
     await interaction.editReply(botResponse);
   } catch (err) {
-    logger.info(err);
     await interaction.editReply(createResponse("Something wrong!"));
   }
 };

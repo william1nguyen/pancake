@@ -12,7 +12,6 @@ import {
   createResponse,
 } from "~/infrastructure/discord/messageHandler";
 import { env } from "~/infrastructure/shared/env";
-import logger from "~/infrastructure/shared/logger";
 
 const command = new SlashCommandBuilder()
   .setName("list")

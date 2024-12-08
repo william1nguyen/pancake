@@ -19,6 +19,7 @@ import {
 import { listAlertCommand } from "~/applications/commands/alerts/listAlertCommand";
 import { getAlertCommand } from "~/applications/commands/alerts/getAlertCommand";
 import { removeAlertCommand } from "~/applications/commands/alerts/removeAlertCommand";
+import { orbrCreateAlertCommand } from "~/applications/commands/orbr/createAlertCommand";
 
 export const client = new Client({
   intents: [
@@ -57,6 +58,7 @@ client.once("ready", async () => {
       registerCommands(listAlertCommand),
       registerCommands(getAlertCommand),
       registerCommands(removeAlertCommand),
+      registerCommands(orbrCreateAlertCommand),
       loadCommands(),
     ]);
 
