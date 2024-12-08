@@ -39,7 +39,7 @@ export const createResponse = <T = string>(responseData: T) => {
     },
   ];
 
-  return createEmbed("Response", "Here is the response:", fields);
+  return createEmbed("Response", "Pancake response:", fields);
 };
 
 export const createListResponse = <T = string>(responseData: T[]) => {

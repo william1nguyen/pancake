@@ -1,0 +1,7 @@
+
+-----------------------------------------------------------------
+  pg_upgrade run on Sun Dec  8 07:25:15 2024
+-----------------------------------------------------------------
+
+check for "/opt/homebrew/opt/postgresql/bin" failed: No such file or directory
+

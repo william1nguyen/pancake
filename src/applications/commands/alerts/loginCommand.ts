@@ -1,8 +1,6 @@
 import axios from "axios";
 import {
   ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
   type ChatInputCommandInteraction,
   ModalBuilder,
   type ModalSubmitInteraction,
@@ -10,8 +8,11 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js";
+import { db } from "~/drizzle/db";
+import { tvAccountTable, dscUserTable } from "~/drizzle/schema";
 import { createResponse } from "~/infrastructure/discord/messageHandler";
 import { env } from "~/infrastructure/shared/env";
+import logger from "~/infrastructure/shared/logger";
 
 const command = new SlashCommandBuilder()
   .setName("login")
@@ -94,6 +95,43 @@ export const loginCommandSubmitHandler = async (
 
       const msg = response.data.message;
       const botResponse = createResponse(msg);
+
+      const cookies = response.data.cookies;
+      const dscUserId = interaction.user.id;
+      const dscUsername = interaction.user.username;
+      const dscChannelId = interaction.channelId;
+
+      try {
+        await db.transaction(async (tx) => {
+          await tx.insert(dscUserTable).values({
+            id: dscUserId,
+            username: dscUsername,
+            channelId: dscChannelId,
+          });
+
+          await tx
+            .insert(tvAccountTable)
+            .values({
+              dscUserId,
+              username,
+              password,
+              backupCode,
+              cookies,
+            })
+            .onConflictDoUpdate({
+              target: [tvAccountTable.dscUserId],
+              set: {
+                username,
+                password,
+                backupCode,
+                cookies,
+              },
+            });
+        });
+      } catch (err) {
+        logger.error(`Transaction failed: ${err}`);
+      }
+
       await interaction.editReply(botResponse);
     } catch (err) {
       await interaction.editReply(
