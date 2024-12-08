@@ -24,6 +24,7 @@ const EnvSchema = Type.Object({
   DATABASE_IDLE_TIMEOUT_MS: Type.Number(),
 
   HANDLER_API_URL: Type.String(),
+  JWT_SECRET: Type.String(),
 });
 
 type Env = Static<typeof EnvSchema>;
@@ -53,6 +54,7 @@ const validateEnv = (): Env => {
     DATABASE_IDLE_TIMEOUT_MS: coerceInt(process.env.DATABASE_IDLE_TIMEOUT_MS),
 
     HANDLER_API_URL: process.env.HANDLER_API_URL,
+    JWT_SECRET: process.env.JWT_SECRET,
   };
 
   if (!validator.Check(env)) {

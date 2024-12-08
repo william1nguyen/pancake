@@ -8,7 +8,7 @@ import {
 import {
   loginCommand,
   loginCommandSubmitHandler,
-} from "~/applications/commands/alerts/loginCommand";
+} from "~/applications/commands/user/loginCommand";
 import { pingCommand } from "~/applications/commands/pingCommand";
 import logger from "../shared/logger";
 import {
@@ -16,6 +16,9 @@ import {
   loadCommands,
   registerCommands,
 } from "./commandHandler";
+import { listAlertCommand } from "~/applications/commands/alerts/listAlertCommand";
+import { getAlertCommand } from "~/applications/commands/alerts/getAlertCommand";
+import { removeAlertCommand } from "~/applications/commands/alerts/removeAlertCommand";
 
 export const client = new Client({
   intents: [
@@ -51,6 +54,9 @@ client.once("ready", async () => {
     await Promise.all([
       registerCommands(pingCommand),
       registerCommands(loginCommand),
+      registerCommands(listAlertCommand),
+      registerCommands(getAlertCommand),
+      registerCommands(removeAlertCommand),
       loadCommands(),
     ]);
 

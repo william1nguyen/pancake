@@ -25,6 +25,8 @@ export const createEmbed = <T = string>(
     .setTimestamp()
     .setFooter({
       text: `Status updated ${new Date().toLocaleString()}`,
+      iconURL:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTExqxRATJj7WIJbB3FmdJAA-GykdJjWnivkw&s",
     });
 
   return { embeds: [embed] };
@@ -39,15 +41,15 @@ export const createResponse = <T = string>(responseData: T) => {
     },
   ];
 
-  return createEmbed("Response", "Pancake response:", fields);
+  return createEmbed("Pancake Response", "Here is response:", fields);
 };
 
 export const createListResponse = <T = string>(responseData: T[]) => {
   const fields: EmbedField<string>[] = responseData.map((data, index) => ({
-    name: `Item ${index + 1}`,
-    value: String(data),
+    name: `${index + 1}`,
+    value: `\`\`\`json\n${JSON.stringify(data, null, 2)}\n\`\`\``,
     inline: false,
   }));
 
-  return createEmbed("Response List", "Here is the list of responses:", fields);
+  return createEmbed("Pancake Response List", "Here is response:", fields);
 };
