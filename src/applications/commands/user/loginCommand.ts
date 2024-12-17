@@ -11,6 +11,7 @@ import {
 import { db } from "~/drizzle/db";
 import { tvAccountTable, dscUserTable } from "~/drizzle/schema";
 import { createResponse } from "~/infrastructure/discord/messageHandler";
+import { commandQueue } from "~/infrastructure/jobs/command";
 import { env } from "~/infrastructure/shared/env";
 import logger from "~/infrastructure/shared/logger";
 
@@ -68,10 +69,7 @@ export const loginCommand = {
 export const loginCommandSubmitHandler = async (
   interaction: ModalSubmitInteraction,
 ) => {
-  if (!interaction.isModalSubmit()) return;
-
-  await interaction.deferReply();
-
+  await interaction.reply(createResponse("Acknowledge"));
   const { customId } = interaction;
 
   if (customId === "login_modal") {
@@ -89,52 +87,19 @@ export const loginCommandSubmitHandler = async (
       const headers = {
         "Content-Type": "application/json",
       };
-      const response = await axios.post(url, data, {
+
+      const userId = interaction.user.id;
+
+      await commandQueue.add("login", {
+        url,
         headers,
+        data,
+        userId,
+        username,
+        channelId: interaction.channelId as string,
       });
-
-      const msg = response.data.message;
-      const botResponse = createResponse(msg);
-
-      const cookies = response.data.cookies;
-      const dscUserId = interaction.user.id;
-      const dscUsername = interaction.user.username;
-      const dscChannelId = interaction.channelId;
-
-      try {
-        await db.transaction(async (tx) => {
-          await tx.insert(dscUserTable).values({
-            id: dscUserId,
-            username: dscUsername,
-            channelId: dscChannelId,
-          });
-
-          await tx
-            .insert(tvAccountTable)
-            .values({
-              dscUserId,
-              username,
-              password,
-              backupCode,
-              cookies,
-            })
-            .onConflictDoUpdate({
-              target: [tvAccountTable.dscUserId],
-              set: {
-                username,
-                password,
-                backupCode,
-                cookies,
-              },
-            });
-        });
-      } catch (err) {
-        logger.error(`Transaction failed: ${err}`);
-      }
-
-      await interaction.editReply(botResponse);
     } catch (err) {
-      await interaction.editReply(
+      await interaction.reply(
         createResponse("Failed to login, Please regenerate your backup code"),
       );
     }

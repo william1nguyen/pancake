@@ -9,7 +9,7 @@ const command = new SlashCommandBuilder()
   .setDescription("Ping bot server");
 
 const execute = async (interaction: ChatInputCommandInteraction) => {
-  await interaction.deferReply();
+  await interaction.deferReply({ ephemeral: true });
 
   const responseData = "Pong";
   const response = createResponse(responseData);

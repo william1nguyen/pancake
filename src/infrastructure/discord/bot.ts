@@ -29,13 +29,15 @@ export const client = new Client({
   ],
 });
 
-const handleModalSubmit = async (interaction: ModalSubmitInteraction) => {
+export const handleModalSubmit = async (
+  interaction: ModalSubmitInteraction,
+) => {
   if (interaction.customId === "login_modal") {
     await loginCommandSubmitHandler(interaction);
   }
 };
 
-const handleChatInputCommand = async (
+export const handleChatInputCommand = async (
   interaction: ChatInputCommandInteraction<CacheType>,
 ) => {
   const commandName = interaction.commandName;
@@ -69,12 +71,23 @@ client.once("ready", async () => {
 });
 
 client.on("interactionCreate", async (interaction) => {
-  if (interaction.isModalSubmit()) {
-    await handleModalSubmit(interaction);
-  }
+  try {
+    if (interaction.isChatInputCommand()) {
+      await handleChatInputCommand(interaction);
+    }
 
-  if (interaction.isChatInputCommand()) {
-    await handleChatInputCommand(interaction);
+    if (interaction.isModalSubmit()) {
+      await handleModalSubmit(interaction);
+    }
+  } catch (err) {
+    logger.error(`Error handling interaction: ${err}`);
+
+    if (interaction.isRepliable()) {
+      await interaction.reply({
+        content: "An error occurred while processing your request.",
+        ephemeral: true,
+      });
+    }
   }
 });
 

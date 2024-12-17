@@ -18,7 +18,8 @@ const command = new SlashCommandBuilder()
   .setDescription("List all alerts from Trading View");
 
 const execute = async (interaction: ChatInputCommandInteraction) => {
-  await interaction.deferReply();
+  await interaction.deferReply({ ephemeral: true });
+
   const dscUserId = await interaction.user.id;
   const tvAccount = await db.query.tvAccountTable.findFirst({
     where: eq(tvAccountTable.dscUserId, dscUserId),

@@ -1,6 +1,7 @@
 import { type Static, Type } from "@fastify/type-provider-typebox";
 import { TypeCompiler } from "@sinclair/typebox/compiler";
 import dotenv from "dotenv";
+import { createError } from "./errors";
 
 const EnvSchema = Type.Object({
   NODE_ENV: Type.Union([
@@ -25,6 +26,11 @@ const EnvSchema = Type.Object({
 
   HANDLER_API_URL: Type.String(),
   JWT_SECRET: Type.String(),
+  REDIS_URL: Type.String(),
+
+  BULL_BOARD_USERNAME: Type.String(),
+  BULL_BOARD_PASSWORD: Type.String(),
+  BULL_REDIS_DB: Type.Number(),
 });
 
 type Env = Static<typeof EnvSchema>;
@@ -34,6 +40,8 @@ const coerceInt = (x: string | null | undefined) => {
   }
   return Number.parseInt(x, 10);
 };
+
+const InvalidEnvError = createError("INVALID_ENV", "Invalid env vars: %s");
 
 const validateEnv = (): Env => {
   console.info("Validating environment variables.");
@@ -55,11 +63,16 @@ const validateEnv = (): Env => {
 
     HANDLER_API_URL: process.env.HANDLER_API_URL,
     JWT_SECRET: process.env.JWT_SECRET,
+    REDIS_URL: process.env.REDIS_URL,
+
+    BULL_BOARD_USERNAME: process.env.BULL_BOARD_USERNAME,
+    BULL_BOARD_PASSWORD: process.env.BULL_BOARD_PASSWORD,
+    BULL_REDIS_DB: coerceInt(process.env.BULL_REDIS_DB),
   };
 
   if (!validator.Check(env)) {
     const errors = [...validator.Errors(env)];
-    throw new Error("Invalid env vars");
+    throw new InvalidEnvError(JSON.stringify(errors, null, 2));
   }
 
   return env;

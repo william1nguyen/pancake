@@ -7,6 +7,7 @@ import { eq } from "drizzle-orm";
 import { db } from "~/drizzle/db";
 import { tvAccountTable } from "~/drizzle/schema";
 import { createResponse } from "~/infrastructure/discord/messageHandler";
+import { commandQueue } from "~/infrastructure/jobs/command";
 import { env } from "~/infrastructure/shared/env";
 import logger from "~/infrastructure/shared/logger";
 
@@ -76,7 +77,8 @@ const command = new SlashCommandBuilder()
   );
 
 const execute = async (interaction: ChatInputCommandInteraction) => {
-  await interaction.deferReply();
+  await interaction.reply(createResponse("Acknowledge"));
+
   const dscUserId = await interaction.user.id;
   const tvAccount = await db.query.tvAccountTable.findFirst({
     where: eq(tvAccountTable.dscUserId, dscUserId),
@@ -96,28 +98,26 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   const duration = interaction.options.getString("duration") ?? undefined;
   const trigger = interaction.options.getString("trigger") ?? undefined;
 
-  try {
-    const url = `${env.HANDLER_API_URL}/alert/create/orbr`;
-    const headers = {
-      tv_cookies: tvCookies,
-    };
-    const data = {
-      symbol,
-      interval,
-      type,
-      duration,
-      addtion: {
-        trigger,
-      },
-    };
-    const res = await axios.post(url, data, { headers });
-    const message = res.data.message;
-    const botResponse = createResponse(message);
-    await interaction.editReply(botResponse);
-  } catch (err) {
-    logger.info(err);
-    await interaction.editReply(createResponse("Something wrong!"));
-  }
+  const url = `${env.HANDLER_API_URL}/alert/create/orbr`;
+  const headers = {
+    tv_cookies: tvCookies,
+  };
+  const data = {
+    symbol,
+    interval,
+    type,
+    duration,
+    addtion: {
+      trigger,
+    },
+  };
+
+  await commandQueue.add("create_alert", {
+    channelId: interaction.channelId,
+    url,
+    headers,
+    data,
+  });
 };
 
 export const orbrCreateAlertCommand = {

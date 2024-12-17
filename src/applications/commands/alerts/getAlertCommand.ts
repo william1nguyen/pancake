@@ -24,7 +24,8 @@ const command = new SlashCommandBuilder()
   );
 
 const execute = async (interaction: ChatInputCommandInteraction) => {
-  await interaction.deferReply();
+  await interaction.deferReply({ ephemeral: true });
+
   const dscUserId = await interaction.user.id;
   const tvAccount = await db.query.tvAccountTable.findFirst({
     where: eq(tvAccountTable.dscUserId, dscUserId),

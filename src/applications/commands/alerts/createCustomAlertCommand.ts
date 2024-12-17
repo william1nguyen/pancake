@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
   type ChatInputCommandInteraction,
   SlashCommandBuilder,
@@ -7,8 +6,8 @@ import { eq } from "drizzle-orm";
 import { db } from "~/drizzle/db";
 import { tvAccountTable } from "~/drizzle/schema";
 import { createResponse } from "~/infrastructure/discord/messageHandler";
+import { commandQueue } from "~/infrastructure/jobs/command";
 import { env } from "~/infrastructure/shared/env";
-import logger from "~/infrastructure/shared/logger";
 
 const intervalChoices = [
   { name: "15m", value: "15 minutes" },
@@ -18,11 +17,6 @@ const intervalChoices = [
   { name: "1d", value: "1 day" },
   { name: "1w", value: "1 week" },
   { name: "1y", value: "1 year" },
-];
-
-const typeChoices = [
-  { name: "buy", value: "Buy" },
-  { name: "sell", value: "Sell" },
 ];
 
 const durationChoices = [
@@ -76,7 +70,8 @@ const command = new SlashCommandBuilder()
   .addStringOption((option) => option.setName("qright"));
 
 const execute = async (interaction: ChatInputCommandInteraction) => {
-  await interaction.deferReply();
+  await interaction.reply(createResponse("Acknowledge"));
+
   const dscUserId = await interaction.user.id;
   const tvAccount = await db.query.tvAccountTable.findFirst({
     where: eq(tvAccountTable.dscUserId, dscUserId),
@@ -103,37 +98,35 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   const qleft = interaction.options.getString("qleft") ?? undefined;
   const qright = interaction.options.getString("qright") ?? undefined;
 
-  try {
-    const url = `${env.HANDLER_API_URL}/alert/create`;
-    const headers = {
-      tv_cookies: tvCookies,
-    };
-    const data = {
-      symbol,
-      interval,
-      type,
-      duration,
-      addtion: {
-        trigger,
-        condition: {
-          pleft,
-          pright,
-          op,
-          tleft,
-          tright,
-          qleft,
-          qright,
-        },
+  const url = `${env.HANDLER_API_URL}/alert/create`;
+  const headers = {
+    tv_cookies: tvCookies,
+  };
+  const data = {
+    symbol,
+    interval,
+    type,
+    duration,
+    addtion: {
+      trigger,
+      condition: {
+        pleft,
+        pright,
+        op,
+        tleft,
+        tright,
+        qleft,
+        qright,
       },
-    };
-    const res = await axios.post(url, data, { headers });
-    const message = res.data.message;
-    const botResponse = createResponse(message);
-    await interaction.editReply(botResponse);
-  } catch (err) {
-    logger.info(err);
-    await interaction.editReply(createResponse("Something wrong!"));
-  }
+    },
+  };
+
+  await commandQueue.add("create_alert", {
+    channelId: interaction.channelId,
+    url,
+    headers,
+    data,
+  });
 };
 
 export const orbrCreateAlertCommand = {
