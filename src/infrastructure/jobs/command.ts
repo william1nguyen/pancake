@@ -7,6 +7,7 @@ import { sendChannelMessage } from "~/applications/services/apiService";
 import { createResponse } from "../discord/messageHandler";
 import { db } from "~/drizzle/db";
 import { dscUserTable, tvAccountTable } from "~/drizzle/schema";
+import { env } from "../shared/env";
 
 interface ICommand {
   url: string;
@@ -94,7 +95,7 @@ export const createCommandWorker = (): Worker => {
     },
     {
       connection: redisForBullMq,
-      concurrency: 1,
+      concurrency: env.MAX_REDIS_CONCURRENCY,
     },
   );
 

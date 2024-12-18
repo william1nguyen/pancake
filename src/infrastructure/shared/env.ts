@@ -27,6 +27,7 @@ const EnvSchema = Type.Object({
   HANDLER_API_URL: Type.String(),
   JWT_SECRET: Type.String(),
   REDIS_URL: Type.String(),
+  MAX_REDIS_CONCURRENCY: Type.Number(),
 
   BULL_BOARD_USERNAME: Type.String(),
   BULL_BOARD_PASSWORD: Type.String(),
@@ -64,6 +65,7 @@ const validateEnv = (): Env => {
     HANDLER_API_URL: process.env.HANDLER_API_URL,
     JWT_SECRET: process.env.JWT_SECRET,
     REDIS_URL: process.env.REDIS_URL,
+    MAX_REDIS_CONCURRENCY: coerceInt(process.env.MAX_REDIS_CONCURRENCY),
 
     BULL_BOARD_USERNAME: process.env.BULL_BOARD_USERNAME,
     BULL_BOARD_PASSWORD: process.env.BULL_BOARD_PASSWORD,
