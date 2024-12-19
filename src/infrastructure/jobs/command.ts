@@ -40,40 +40,44 @@ export const createCommandWorker = (): Worker => {
           const message = res.data.message;
           const cookies = res.data.cookies;
 
-          await db.transaction(async (tx) => {
-            await tx
-              .insert(dscUserTable)
-              .values({
-                id: userId,
-                username: username,
-                channelId: channelId,
-              })
-              .onConflictDoNothing();
+          try {
+            await db.transaction(async (tx) => {
+              await tx
+                .insert(dscUserTable)
+                .values({
+                  id: userId,
+                  username: username,
+                  channelId: channelId,
+                })
+                .onConflictDoNothing();
 
-            await tx
-              .insert(tvAccountTable)
-              .values({
-                dscUserId: userId,
-                username,
-                password: data.password,
-                backupCode: data.backupCode,
-                cookies,
-              })
-              .onConflictDoUpdate({
-                target: [tvAccountTable.dscUserId],
-                set: {
+              await tx
+                .insert(tvAccountTable)
+                .values({
+                  dscUserId: userId,
                   username,
                   password: data.password,
                   backupCode: data.backupCode,
                   cookies,
-                },
-              });
-          });
+                })
+                .onConflictDoUpdate({
+                  target: [tvAccountTable.dscUserId],
+                  set: {
+                    username,
+                    password: data.password,
+                    backupCode: data.backupCode,
+                    cookies,
+                  },
+                });
+            });
+          } catch (err) {
+            logger.error(`Transaction failed: ${err}`);
+          }
 
           const botResponse = createResponse(message);
           await sendChannelMessage(channelId, botResponse);
         } catch (err) {
-          logger.error(`Transaction failed: ${err}`);
+          logger.error(`Login failed: ${err}`);
           const botResponse = createResponse("Failed to login");
           await sendChannelMessage(channelId, botResponse);
         }

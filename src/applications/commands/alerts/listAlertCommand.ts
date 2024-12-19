@@ -12,6 +12,7 @@ import {
   createResponse,
 } from "~/infrastructure/discord/messageHandler";
 import { env } from "~/infrastructure/shared/env";
+import logger from "~/infrastructure/shared/logger";
 
 const command = new SlashCommandBuilder()
   .setName("list")
@@ -54,6 +55,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
 
     await interaction.editReply(botResponse);
   } catch (err) {
+    logger.error(err);
     await interaction.editReply(createResponse("Something wrong!"));
   }
 };

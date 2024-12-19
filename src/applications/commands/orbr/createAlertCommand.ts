@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
   type ChatInputCommandInteraction,
   SlashCommandBuilder,
@@ -9,7 +8,6 @@ import { tvAccountTable } from "~/drizzle/schema";
 import { createResponse } from "~/infrastructure/discord/messageHandler";
 import { commandQueue } from "~/infrastructure/jobs/command";
 import { env } from "~/infrastructure/shared/env";
-import logger from "~/infrastructure/shared/logger";
 
 const intervalChoices = [
   { name: "15m", value: "15 minutes" },
@@ -83,15 +81,15 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   const tvAccount = await db.query.tvAccountTable.findFirst({
     where: eq(tvAccountTable.dscUserId, dscUserId),
   });
+  const tvCookies = tvAccount?.cookies;
 
-  if (!tvAccount || !tvAccount.cookies) {
+  if (!tvAccount || !tvCookies) {
     const response = "You need to login first!";
     const botResponse = createResponse(response);
     await interaction.editReply(botResponse);
     return;
   }
 
-  const tvCookies = tvAccount.cookies;
   const symbol = interaction.options.getString("symbol") ?? undefined;
   const interval = interaction.options.getString("interval") ?? undefined;
   const type = interaction.options.getString("type") ?? undefined;
