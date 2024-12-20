@@ -45,7 +45,7 @@ export const loadCommands = async () => {
     });
 
     logger.info("Successfully load all commands");
-  } catch (error) {
-    logger.info(`Failed to load command ${error}`);
+  } catch (err) {
+    logger.info(`Failed to load command ${err}`);
   }
 };

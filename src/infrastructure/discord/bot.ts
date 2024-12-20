@@ -65,8 +65,8 @@ client.once("ready", async () => {
     ]);
 
     logger.info("All commands registered successfully");
-  } catch (error) {
-    logger.error("Error registering commands:", error);
+  } catch (err) {
+    logger.error("Error registering commands:", err);
   }
 });
 

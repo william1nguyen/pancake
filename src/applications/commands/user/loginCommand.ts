@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
   ActionRowBuilder,
   type ChatInputCommandInteraction,
@@ -8,12 +7,10 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js";
-import { db } from "~/drizzle/db";
-import { tvAccountTable, dscUserTable } from "~/drizzle/schema";
 import { createResponse } from "~/infrastructure/discord/messageHandler";
 import { commandQueue } from "~/infrastructure/jobs/command";
 import { env } from "~/infrastructure/shared/env";
-import logger from "~/infrastructure/shared/logger";
+import { BotResponse } from "~/infrastructure/utils/botResponse";
 
 const command = new SlashCommandBuilder()
   .setName("login")
@@ -40,7 +37,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
 
   const backupCode = new TextInputBuilder()
     .setCustomId("backupCode")
-    .setLabel("backupCode")
+    .setLabel("Backup Code / Authentication Code")
     .setStyle(TextInputStyle.Short)
     .setPlaceholder("Enter your backup code")
     .setRequired(true);
@@ -89,19 +86,18 @@ export const loginCommandSubmitHandler = async (
       };
 
       const userId = interaction.user.id;
+      const channelId = interaction.channelId;
+      if (!channelId) return;
 
       await commandQueue.add("login", {
+        channelId,
+        userId,
         url,
         headers,
         data,
-        userId,
-        username,
-        channelId: interaction.channelId as string,
       });
     } catch (err) {
-      await interaction.reply(
-        createResponse("Failed to login, Please regenerate your backup code"),
-      );
+      await interaction.reply(createResponse(BotResponse.LoginFailed));
     }
   }
 };

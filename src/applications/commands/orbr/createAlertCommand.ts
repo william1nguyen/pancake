@@ -4,10 +4,11 @@ import {
 } from "discord.js";
 import { eq } from "drizzle-orm";
 import { db } from "~/drizzle/db";
-import { tvAccountTable } from "~/drizzle/schema";
+import { userTable } from "~/drizzle/schema";
 import { createResponse } from "~/infrastructure/discord/messageHandler";
 import { commandQueue } from "~/infrastructure/jobs/command";
 import { env } from "~/infrastructure/shared/env";
+import { BotResponse } from "~/infrastructure/utils/botResponse";
 
 const intervalChoices = [
   { name: "15m", value: "15 minutes" },
@@ -36,6 +37,11 @@ const triggerChoices = [
   { name: "Once Per Bar Close", value: "Once Per Bar Close" },
   { name: "Once Per Minute", value: "Once Per Minute" },
 ];
+
+const optional = (value: string | null) => {
+  if (!value) return undefined;
+  return value;
+};
 
 const command = new SlashCommandBuilder()
   .setName("orbr_alert")
@@ -75,43 +81,54 @@ const command = new SlashCommandBuilder()
   );
 
 const execute = async (interaction: ChatInputCommandInteraction) => {
-  await interaction.reply(createResponse("Acknowledge"));
-
-  const dscUserId = await interaction.user.id;
-  const tvAccount = await db.query.tvAccountTable.findFirst({
-    where: eq(tvAccountTable.dscUserId, dscUserId),
+  const userId = await interaction.user.id;
+  const user = await db.query.userTable.findFirst({
+    where: eq(userTable.id, userId),
   });
-  const tvCookies = tvAccount?.cookies;
 
-  if (!tvAccount || !tvCookies) {
-    const response = "You need to login first!";
-    const botResponse = createResponse(response);
-    await interaction.editReply(botResponse);
+  if (!user) {
+    const botResponse = createResponse(BotResponse.UserNotFound);
+    interaction.reply(botResponse);
     return;
   }
 
-  const symbol = interaction.options.getString("symbol") ?? undefined;
-  const interval = interaction.options.getString("interval") ?? undefined;
-  const type = interaction.options.getString("type") ?? undefined;
-  const duration = interaction.options.getString("duration") ?? undefined;
-  const trigger = interaction.options.getString("trigger") ?? undefined;
+  const cookies = user.cookies;
+
+  if (!cookies) {
+    const botResponse = createResponse(BotResponse.UserNotFound);
+    interaction.reply(botResponse);
+    return;
+  }
+
+  const symbol = optional(interaction.options.getString("symbol"));
+  const interval = optional(interaction.options.getString("interval"));
+  const type = optional(interaction.options.getString("type"));
+  const duration = optional(interaction.options.getString("duration"));
+  const trigger = optional(interaction.options.getString("trigger"));
 
   const url = `${env.HANDLER_API_URL}/alert/create/orbr`;
   const headers = {
-    tv_cookies: tvCookies,
+    tv_cookies: cookies,
   };
   const data = {
     symbol,
     interval,
     type,
+    webhookUrl: user.webhookUrl,
     duration,
     addtion: {
       trigger,
     },
   };
 
+  await interaction.reply(createResponse("Acknowledge"));
+
+  const channelId = interaction.channelId;
+  if (!channelId) return;
+
   await commandQueue.add("create_alert", {
-    channelId: interaction.channelId,
+    channelId,
+    userId,
     url,
     headers,
     data,

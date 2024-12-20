@@ -6,13 +6,14 @@ import {
 import { eq } from "drizzle-orm";
 import type { Alert } from "~/domain/alert/alert.types";
 import { db } from "~/drizzle/db";
-import { tvAccountTable } from "~/drizzle/schema";
+import { userTable } from "~/drizzle/schema";
 import {
   createListResponse,
   createResponse,
 } from "~/infrastructure/discord/messageHandler";
 import { env } from "~/infrastructure/shared/env";
 import logger from "~/infrastructure/shared/logger";
+import { BotResponse } from "~/infrastructure/utils/botResponse";
 
 const command = new SlashCommandBuilder()
   .setName("list")
@@ -21,24 +22,29 @@ const command = new SlashCommandBuilder()
 const execute = async (interaction: ChatInputCommandInteraction) => {
   await interaction.deferReply({ ephemeral: true });
 
-  const dscUserId = await interaction.user.id;
-  const tvAccount = await db.query.tvAccountTable.findFirst({
-    where: eq(tvAccountTable.dscUserId, dscUserId),
+  const userId = await interaction.user.id;
+  const user = await db.query.userTable.findFirst({
+    where: eq(userTable.id, userId),
   });
 
-  if (!tvAccount || !tvAccount.cookies) {
-    const response = "You need to login first!";
-    const botResponse = createResponse(response);
-    await interaction.editReply(botResponse);
+  if (!user) {
+    const botResponse = createResponse(BotResponse.UserNotFound);
+    interaction.editReply(botResponse);
     return;
   }
 
-  const tvCookies = tvAccount.cookies;
+  const cookies = user.cookies;
+
+  if (!cookies) {
+    const botResponse = createResponse(BotResponse.UserNotFound);
+    interaction.editReply(botResponse);
+    return;
+  }
 
   try {
     const url = `${env.HANDLER_API_URL}/alert/list`;
     const headers = {
-      tv_cookies: tvCookies,
+      tv_cookies: cookies,
     };
     const res = await axios.get(url, { headers });
     const alerts = res.data.alerts as Alert[];
@@ -56,7 +62,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
     await interaction.editReply(botResponse);
   } catch (err) {
     logger.error(err);
-    await interaction.editReply(createResponse("Something wrong!"));
+    await interaction.editReply(createResponse(BotResponse.ListAlertsFailed));
   }
 };
 
