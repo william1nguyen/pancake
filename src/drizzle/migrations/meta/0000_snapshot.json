@@ -1,5 +1,5 @@
 {
-  "id": "04688ec3-bd34-4175-a700-a52617b791f3",
+  "id": "803be520-4df4-4a59-b9dd-16e5e1450c5a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -26,9 +26,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "webhook_url": {
-          "name": "webhook_url",
-          "type": "text",
+        "webhook": {
+          "name": "webhook",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         }

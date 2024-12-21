@@ -116,7 +116,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
     symbol,
     interval,
     type,
-    webhookUrl: user.webhookUrl,
+    webhook: user.webhook,
     duration,
     addtion: {
       trigger,

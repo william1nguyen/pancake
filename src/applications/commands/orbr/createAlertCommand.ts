@@ -78,6 +78,11 @@ const command = new SlashCommandBuilder()
       .setName("trigger")
       .setDescription("Alert trigger, e.g: Only Once, Once Per Bar Close, ...")
       .addChoices(triggerChoices),
+  )
+  .addStringOption((option) =>
+    option
+      .setName("webhook_url")
+      .setDescription("Webhook URL for returning data"),
   );
 
 const execute = async (interaction: ChatInputCommandInteraction) => {
@@ -105,6 +110,13 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   const type = optional(interaction.options.getString("type"));
   const duration = optional(interaction.options.getString("duration"));
   const trigger = optional(interaction.options.getString("trigger"));
+  const webhook = user.webhook;
+
+  if (!webhook) {
+    const botResponse = createResponse(BotResponse.WebhookMissing);
+    interaction.reply(botResponse);
+    return;
+  }
 
   const url = `${env.HANDLER_API_URL}/alert/create/orbr`;
   const headers = {
@@ -114,9 +126,9 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
     symbol,
     interval,
     type,
-    webhookUrl: user.webhookUrl,
+    webhook,
     duration,
-    addtion: {
+    addition: {
       trigger,
     },
   };

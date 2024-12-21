@@ -14,6 +14,11 @@ import type { TextChannel } from "discord.js";
 import { v4 as uuidv4 } from "uuid";
 import { BotResponse } from "../utils/botResponse";
 
+interface IWebhook {
+  name: string;
+  url: string;
+}
+
 interface ICommand {
   channelId: string;
   userId: string;
@@ -34,7 +39,7 @@ export const commandQueue = new Queue<ICommand>(COMMAND_QUEUE, {
 const handleLoginRequest = async (job: Job) => {
   const { channelId, userId, url, headers, data } = job.data as ICommand;
   let cookies = null;
-  let webhookUrl = null;
+  let webhook: IWebhook;
 
   try {
     const res = await axios.post(url, data, { headers });
@@ -55,21 +60,27 @@ const handleLoginRequest = async (job: Job) => {
     const webhooks = await channel.fetchWebhooks();
 
     if (!webhooks.size) {
-      const webhook = await channel.createWebhook({
+      const wh = await channel.createWebhook({
         name: `webhook-${uuidv4()}`,
         avatar:
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTExqxRATJj7WIJbB3FmdJAA-GykdJjWnivkw&s",
       });
 
-      webhookUrl = webhook.url;
+      webhook = {
+        name: wh.name,
+        url: wh.url,
+      };
 
       logger.info(`New webhook created: ${webhook.url}`);
     } else {
-      const webhook = await webhooks.first();
-      webhookUrl = webhook?.url;
+      const wh = (await webhooks.first()) as IWebhook;
+      webhook = {
+        name: wh.name,
+        url: wh.url,
+      };
     }
 
-    if (!webhookUrl) {
+    if (!webhook || !webhook.url) {
       await sendChannelMessage(channelId, BotResponse.LoginFailed);
       return;
     }
@@ -87,14 +98,14 @@ const handleLoginRequest = async (job: Job) => {
           id: userId,
           channelId,
           cookies,
-          webhookUrl,
+          webhook,
         })
         .onConflictDoUpdate({
           target: [userTable.id],
           set: {
             channelId,
             cookies,
-            webhookUrl,
+            webhook,
           },
         });
     });
@@ -113,9 +124,6 @@ const handleCreateAlertRequest = async (job: Job) => {
   const user = await db.query.userTable.findFirst({
     where: eq(userTable.id, userId),
   });
-
-  console.log(userId);
-  console.log(user);
 
   if (!user) {
     const botResponse = createResponse(BotResponse.UserNotFound);

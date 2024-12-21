@@ -8,4 +8,5 @@ export enum BotResponse {
   LoginSuccessfully = "Success to login! Now you can use Pancake!",
   CreateAlertSuccessfully = "Success to create alert! Please use /list or /get command to check!",
   CreateAlertFailed = "Failed to create alert! Please relogin!",
+  WebhookMissing = "Webhook is missing! Please relogin to connect to discord webhook or give custom one!",
 }
