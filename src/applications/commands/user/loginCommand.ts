@@ -37,7 +37,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
 
   const backupCode = new TextInputBuilder()
     .setCustomId("backupCode")
-    .setLabel("Backup Code / Authentication Code")
+    .setLabel("Backup Code")
     .setStyle(TextInputStyle.Short)
     .setPlaceholder("Enter your backup code")
     .setRequired(true);
