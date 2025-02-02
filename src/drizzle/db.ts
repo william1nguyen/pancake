@@ -2,8 +2,8 @@ import * as schema from "./schema";
 
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
-import { env } from "~/infrastructure/shared/env";
-import logger from "~/infrastructure/shared/logger";
+import { env } from "~/infra/utils/env";
+import logger from "~/infra/utils/logger";
 
 interface PoolOptions {
   connectionString: string;

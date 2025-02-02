@@ -8,7 +8,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "lib": ["ES2021"],
+    "lib": ["ES2021", "DOM"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {

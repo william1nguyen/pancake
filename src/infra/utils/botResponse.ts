@@ -1,0 +1,15 @@
+export enum BotResponse {
+  UserNotFound = "User not found error! Please login before request!",
+  GetAlertFailed = "Failed to get alert! Please recheck alertID or relogin!",
+  ListAlertsFailed = "Failed to list alerts! Please relogin!",
+  RemoveAlertSuccessfully = "Success to remove alert! Please use /list or /get command to check!",
+  RemoveAlertFailed = "Failed to remove alert! Please recheck alertID or relogin!",
+  LoginFailed = "Failed to login! Please regenerate backup code / authentication code!",
+  LoginSuccessfully = "Success to login! Now you can use Pancake!",
+  CreateAlertSuccessfully = "Success to create alert! Please use /list or /get command to check!",
+  CreateAlertFailed = "Failed to create alert! Please relogin!",
+  StoreUserCookiesFailed = "Failed to store user cookies!",
+  CookiesMissed = "User cookies is missed! Please relogin!",
+  CreateNewWebhookFailed = "Failed to create new webhook for server!",
+  WebhookMissed = "Webhook is missed! Please relogin to connect to discord webhook or give custom one!",
+}

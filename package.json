@@ -1,9 +1,8 @@
 {
-  "name": "typescript-template-tsup",
+  "name": "pancake",
   "version": "1.0.0",
   "type": "module",
   "private": true,
-  "description": "TS backend template powered by tsup",
   "author": "William Nguyen",
   "license": "UNLICENSED",
   "lint-staged": {
@@ -99,6 +98,10 @@
     "puppeteer": "^23.7.0",
     "puppeteer-core": "^23.7.0",
     "puppeteer-page-proxy": "^1.3.0",
-    "uuid": "^11.0.3"
+    "uuid": "^11.0.3",
+    "@fastify/swagger": "^9.4.0",
+    "@scalar/fastify-api-reference": "^1.25.72",
+    "@fastify/cookie": "^11.0.1",
+    "@fastify/rate-limit": "^10.2.1"
   }
 }

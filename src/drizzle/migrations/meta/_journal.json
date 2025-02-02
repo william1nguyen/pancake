@@ -8,6 +8,13 @@
       "when": 1734736388874,
       "tag": "0000_create_schemas",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1738466882013,
+      "tag": "0001_add_new_column_user_jwt_secret",
+      "breakpoints": true
     }
   ]
 }

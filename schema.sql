@@ -1,0 +1,122 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 11.16 (Debian 11.16-1.pgdg90+1)
+-- Dumped by pg_dump version 13.18
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: drizzle; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA drizzle;
+
+
+SET default_tablespace = '';
+
+--
+-- Name: __drizzle_migrations; Type: TABLE; Schema: drizzle; Owner: -
+--
+
+CREATE TABLE drizzle.__drizzle_migrations (
+    id integer NOT NULL,
+    hash text NOT NULL,
+    created_at bigint
+);
+
+
+--
+-- Name: __drizzle_migrations_id_seq; Type: SEQUENCE; Schema: drizzle; Owner: -
+--
+
+CREATE SEQUENCE drizzle.__drizzle_migrations_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: __drizzle_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: drizzle; Owner: -
+--
+
+ALTER SEQUENCE drizzle.__drizzle_migrations_id_seq OWNED BY drizzle.__drizzle_migrations.id;
+
+
+--
+-- Name: user; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public."user" (
+    id text NOT NULL,
+    channel_id text,
+    cookies text,
+    webhook jsonb
+);
+
+
+--
+-- Name: __drizzle_migrations id; Type: DEFAULT; Schema: drizzle; Owner: -
+--
+
+ALTER TABLE ONLY drizzle.__drizzle_migrations ALTER COLUMN id SET DEFAULT nextval('drizzle.__drizzle_migrations_id_seq'::regclass);
+
+
+--
+-- Data for Name: __drizzle_migrations; Type: TABLE DATA; Schema: drizzle; Owner: -
+--
+
+COPY drizzle.__drizzle_migrations (id, hash, created_at) FROM stdin;
+1	b9e52bb0bb3bd878549da95418736736d4b8c9bccfbde036c24e18793c93ccc6	1734736388874
+\.
+
+
+--
+-- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public."user" (id, channel_id, cookies, webhook) FROM stdin;
+828225910300737607	1301244643085914112	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsidHZfY29va2llcyI6W3sibmFtZSI6ImNhY2hlYyIsInZhbHVlIjoiNDQ3MDM1MWUtYmE0YS00MTU5LTllZTEtMDBlNjliN2M4ZDNlIiwiZG9tYWluIjoiLnRyYWRpbmd2aWV3LmNvbSIsInBhdGgiOiIvIiwiZXhwaXJlcyI6LTEsInNpemUiOjQyLCJodHRwT25seSI6ZmFsc2UsInNlY3VyZSI6ZmFsc2UsInNlc3Npb24iOnRydWUsInByaW9yaXR5IjoiTWVkaXVtIiwic2FtZVBhcnR5IjpmYWxzZSwic291cmNlU2NoZW1lIjoiU2VjdXJlIn0seyJuYW1lIjoiZXRnIiwidmFsdWUiOiI0NDcwMzUxZS1iYTRhLTQxNTktOWVlMS0wMGU2OWI3YzhkM2UiLCJkb21haW4iOiIudHJhZGluZ3ZpZXcuY29tIiwicGF0aCI6Ii8iLCJleHBpcmVzIjotMSwic2l6ZSI6MzksImh0dHBPbmx5IjpmYWxzZSwic2VjdXJlIjpmYWxzZSwic2Vzc2lvbiI6dHJ1ZSwicHJpb3JpdHkiOiJNZWRpdW0iLCJzYW1lUGFydHkiOmZhbHNlLCJzb3VyY2VTY2hlbWUiOiJTZWN1cmUifSx7Im5hbWUiOiJ0dl9lY3VpZCIsInZhbHVlIjoiNDQ3MDM1MWUtYmE0YS00MTU5LTllZTEtMDBlNjliN2M4ZDNlIiwiZG9tYWluIjoiLnRyYWRpbmd2aWV3LmNvbSIsInBhdGgiOiIvIiwiZXhwaXJlcyI6MTc2OTI5ODQ0NS4yODkwODksInNpemUiOjQ0LCJodHRwT25seSI6ZmFsc2UsInNlY3VyZSI6ZmFsc2UsInNlc3Npb24iOmZhbHNlLCJwcmlvcml0eSI6Ik1lZGl1bSIsInNhbWVQYXJ0eSI6ZmFsc2UsInNvdXJjZVNjaGVtZSI6IlNlY3VyZSJ9LHsibmFtZSI6InNlc3Npb25pZF9zaWduIiwidmFsdWUiOiJ2Mzo1TUNSMnNMb2RwVFhWQ2pXWUtrMGptMkVvUDQ2cEF2Znp0dlJWc0x2bG8wPSIsImRvbWFpbiI6Ii50cmFkaW5ndmlldy5jb20iLCJwYXRoIjoiLyIsImV4cGlyZXMiOjE3NDI3NzM2NDEuNTQ3NjQ4LCJzaXplIjo2MSwiaHR0cE9ubHkiOnRydWUsInNlY3VyZSI6dHJ1ZSwic2Vzc2lvbiI6ZmFsc2UsInNhbWVTaXRlIjoiTGF4IiwicHJpb3JpdHkiOiJNZWRpdW0iLCJzYW1lUGFydHkiOmZhbHNlLCJzb3VyY2VTY2hlbWUiOiJTZWN1cmUifSx7Im5hbWUiOiJzZXNzaW9uaWQiLCJ2YWx1ZSI6ImdoYWNlOGE2Y2V2bmQ5ZDd2ZDNpYmRla2xxYmh6cmt5IiwiZG9tYWluIjoiLnRyYWRpbmd2aWV3LmNvbSIsInBhdGgiOiIvIiwiZXhwaXJlcyI6MTc0Mjc3MzY0MS41NDc2MSwic2l6ZSI6NDEsImh0dHBPbmx5Ijp0cnVlLCJzZWN1cmUiOnRydWUsInNlc3Npb24iOmZhbHNlLCJzYW1lU2l0ZSI6IkxheCIsInByaW9yaXR5IjoiTWVkaXVtIiwic2FtZVBhcnR5IjpmYWxzZSwic291cmNlU2NoZW1lIjoiU2VjdXJlIn0seyJuYW1lIjoiZGV2aWNlX3QiLCJ2YWx1ZSI6ImFsbGFka0pST2pJLmxmcGM0bEZTVDdEc0ZZVWxKcVFTUWpkVjNpODJaR2NQRXZheVNGMnZ6WW8iLCJkb21haW4iOiIudHJhZGluZ3ZpZXcuY29tIiwicGF0aCI6Ii8iLCJleHBpcmVzIjoxNzY1ODQyNDQxLjU0NzU1LCJzaXplIjo2MywiaHR0cE9ubHkiOnRydWUsInNlY3VyZSI6dHJ1ZSwic2Vzc2lvbiI6ZmFsc2UsInNhbWVTaXRlIjoiTm9uZSIsInByaW9yaXR5IjoiTWVkaXVtIiwic2FtZVBhcnR5IjpmYWxzZSwic291cmNlU2NoZW1lIjoiU2VjdXJlIn0seyJuYW1lIjoiX2dhX1lWVlJZR0wwRTAiLCJ2YWx1ZSI6IkdTMS4xLjE3MzQ3Mzg0MzQuMS4wLjE3MzQ3Mzg0MzkuNTUuMC4wIiwiZG9tYWluIjoiLnRyYWRpbmd2aWV3LmNvbSIsInBhdGgiOiIvIiwiZXhwaXJlcyI6MTc2OTI5ODQzOS45OTk5NjUsInNpemUiOjUyLCJodHRwT25seSI6ZmFsc2UsInNlY3VyZSI6ZmFsc2UsInNlc3Npb24iOmZhbHNlLCJwcmlvcml0eSI6Ik1lZGl1bSIsInNhbWVQYXJ0eSI6ZmFsc2UsInNvdXJjZVNjaGVtZSI6IlNlY3VyZSJ9LHsibmFtZSI6Il9zcF9pZC5jZjFhIiwidmFsdWUiOiIzY2FkYzMyYy1mNjVkLTQ0NTMtODZmZi1kZThmMDc2NmQyNjIuMTczNDczODQzMi4xLjE3MzQ3Mzg0MzQuLmMzNmY1OTkwLWJlMjAtNDlmNy04ZTIzLTJmZGU0MDM2MmFiNy4uOTdjOTU1OWQtMTU0OS00NWVjLTg1NTQtZGFiZGMzYmZhODIyLjE3MzQ3Mzg0MzE3MjcuMiIsImRvbWFpbiI6Ii50cmFkaW5ndmlldy5jb20iLCJwYXRoIjoiLyIsImV4cGlyZXMiOjE3NjkyOTg0MzMuOTY1NjA3LCJzaXplIjoxNjMsImh0dHBPbmx5IjpmYWxzZSwic2VjdXJlIjp0cnVlLCJzZXNzaW9uIjpmYWxzZSwic2FtZVNpdGUiOiJOb25lIiwicHJpb3JpdHkiOiJNZWRpdW0iLCJzYW1lUGFydHkiOmZhbHNlLCJzb3VyY2VTY2hlbWUiOiJTZWN1cmUifSx7Im5hbWUiOiJwbmciLCJ2YWx1ZSI6IjQ0NzAzNTFlLWJhNGEtNDE1OS05ZWUxLTAwZTY5YjdjOGQzZSIsImRvbWFpbiI6Ii50cmFkaW5ndmlldy5jb20iLCJwYXRoIjoiLyIsImV4cGlyZXMiOi0xLCJzaXplIjozOSwiaHR0cE9ubHkiOmZhbHNlLCJzZWN1cmUiOmZhbHNlLCJzZXNzaW9uIjp0cnVlLCJwcmlvcml0eSI6Ik1lZGl1bSIsInNhbWVQYXJ0eSI6ZmFsc2UsInNvdXJjZVNjaGVtZSI6IlNlY3VyZSJ9LHsibmFtZSI6Il9nYSIsInZhbHVlIjoiR0ExLjEuMjA4MTUxNTI2NS4xNzM0NzM4NDM1IiwiZG9tYWluIjoiLnRyYWRpbmd2aWV3LmNvbSIsInBhdGgiOiIvIiwiZXhwaXJlcyI6MTc2OTI5ODQzNC42ODgyMywic2l6ZSI6MzAsImh0dHBPbmx5IjpmYWxzZSwic2VjdXJlIjpmYWxzZSwic2Vzc2lvbiI6ZmFsc2UsInByaW9yaXR5IjoiTWVkaXVtIiwic2FtZVBhcnR5IjpmYWxzZSwic291cmNlU2NoZW1lIjoiU2VjdXJlIn0seyJuYW1lIjoiY29va2llc1NldHRpbmdzIiwidmFsdWUiOiJ7XCJhbmFseXRpY3NcIjp0cnVlLFwiYWR2ZXJ0aXNpbmdcIjp0cnVlfSIsImRvbWFpbiI6Ii50cmFkaW5ndmlldy5jb20iLCJwYXRoIjoiLyIsImV4cGlyZXMiOjE3NjkyOTg0MzMuOTY1MDYzLCJzaXplIjo1MiwiaHR0cE9ubHkiOmZhbHNlLCJzZWN1cmUiOmZhbHNlLCJzZXNzaW9uIjpmYWxzZSwicHJpb3JpdHkiOiJNZWRpdW0iLCJzYW1lUGFydHkiOmZhbHNlLCJzb3VyY2VTY2hlbWUiOiJTZWN1cmUifSx7Im5hbWUiOiJjb29raWVQcml2YWN5UHJlZmVyZW5jZUJhbm5lclByb2R1Y3Rpb24iLCJ2YWx1ZSI6Im5vdEFwcGxpY2FibGUiLCJkb21haW4iOiIudHJhZGluZ3ZpZXcuY29tIiwicGF0aCI6Ii8iLCJleHBpcmVzIjoxNzY5Mjk4NDMzLjk2NDA1Miwic2l6ZSI6NTIsImh0dHBPbmx5IjpmYWxzZSwic2VjdXJlIjpmYWxzZSwic2Vzc2lvbiI6ZmFsc2UsInByaW9yaXR5IjoiTWVkaXVtIiwic2FtZVBhcnR5IjpmYWxzZSwic291cmNlU2NoZW1lIjoiU2VjdXJlIn0seyJuYW1lIjoiX3NwX3Nlcy5jZjFhIiwidmFsdWUiOiIqIiwiZG9tYWluIjoiLnRyYWRpbmd2aWV3LmNvbSIsInBhdGgiOiIvIiwiZXhwaXJlcyI6MTc0MjUxNDQzMywic2l6ZSI6MTMsImh0dHBPbmx5IjpmYWxzZSwic2VjdXJlIjp0cnVlLCJzZXNzaW9uIjpmYWxzZSwic2FtZVNpdGUiOiJOb25lIiwicHJpb3JpdHkiOiJNZWRpdW0iLCJzYW1lUGFydHkiOmZhbHNlLCJzb3VyY2VTY2hlbWUiOiJTZWN1cmUifV19LCJleHAiOjE3Mzc0MTY4NDU5NDUsIm5hbWUiOiJ0cmFkaW5ndmlld19jb29raWVzIiwiaWF0IjoxNzM0NzM4NDQ1fQ.pTpIXDP-HOUMZ6BI6uMx8NwIRmlO0kJsGTObyEmDfVk	{"url": "https://discord.com/api/webhooks/1319610517718831145/Ukc5XM_3iVv6sxXX2geicriZHEwTlkMJS5zv1Br7pw4GFBot_t_IPPZDcoe8dngTBY1b", "name": "Captain Hook"}
+\.
+
+
+--
+-- Name: __drizzle_migrations_id_seq; Type: SEQUENCE SET; Schema: drizzle; Owner: -
+--
+
+SELECT pg_catalog.setval('drizzle.__drizzle_migrations_id_seq', 1, true);
+
+
+--
+-- Name: __drizzle_migrations __drizzle_migrations_pkey; Type: CONSTRAINT; Schema: drizzle; Owner: -
+--
+
+ALTER TABLE ONLY drizzle.__drizzle_migrations
+    ADD CONSTRAINT __drizzle_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user user_id_unique; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_id_unique PRIMARY KEY (id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

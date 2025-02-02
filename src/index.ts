@@ -1,8 +1,8 @@
-import { app } from "./infrastructure/app";
-import { client } from "./infrastructure/discord/bot";
-import { setupBackgroundJobs } from "./infrastructure/jobs";
-import { env } from "./infrastructure/shared/env";
-import logger from "./infrastructure/shared/logger";
+import { app } from "./infra/app";
+import { client } from "./infra/discord";
+import { setupBackgroundJobs } from "./infra/jobs";
+import { env } from "./infra/utils/env";
+import logger from "./infra/utils/logger";
 
 const startApp = async () => {
   app.listen({ port: 8000 }, (err, address) => {
