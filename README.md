@@ -1,92 +1,63 @@
-# 🥞 Pancake Discord Bot 🚀
+# 🥞 Pancake Discord Bot
 
-**Pancake Bot** is a powerful and user-friendly Discord bot designed to seamlessly integrate with **TradingView** to manage and set alerts directly from your Discord server. With an intuitive command system, Pancake simplifies alert monitoring, user authentication, and service control.
+Pancake Bot is a powerful and easy-to-use Discord bot that integrates with TradingView. It helps you manage alerts, authenticate users, and receive real-time notifications directly in your Discord server.
 
 ![Pancake Bot](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTExqxRATJj7WIJbB3FmdJAA-GykdJjWnivkw&s)
 
 ---
 
-## ✨ **Features**
+## Features
 
-- **TradingView Integration:** Effortlessly set and manage alerts via TradingView.
-- **User Authentication:** Securely store and manage user sessions with cookies.
-- **Real-time Updates:** Stay informed with up-to-date alerts and notifications.
-- **User-Friendly Commands:** Simple commands to manage alerts and retrieve information.
-
----
-
-## 📋 **Commands**
-
-### 🛠 **Authentication**
-
-- **`/login`**: 🔑 Authenticate and store user cookies. Connect the user with a channel webhook.
-
-### 📊 **Alert Management**
-
-- **`/get` | `/list`**: 📋 Retrieve and display TradingView alert information.
-- **`/remove`**: 🗑 Remove specific alerts or all alerts.
-- **`/orbr_alert`**: ⚠️ Set ORBR-specific alerts.
-
-### 🔄 **Workflow**
-
-1. **Login:** Start with `/login` to authenticate your session.
-2. **Manage Alerts:** Use `/get`, `/list`, `/remove`, or `/orbr_alert` to interact with alerts.
+- Connect to TradingView to create and manage alerts
+- User login with cookies
+- Real-time alert notifications
+- Simple and intuitive command system
 
 ---
 
-## ⚙️ **How It Works**
+## Commands
 
-1. **User Authentication:** Use `/login` to store your cookies and link your Discord user to TradingView.
-2. **Alert Retrieval:** Fetch alert details with `/get` or `/list`.
-3. **Manage Alerts:** Add or remove alerts with `/remove` and `/orbr_alert`.
-4. **Notification Workflow:** Stay updated with timely notifications.
-
----
-
-## 📥 **Installation**
-
-1. **Invite Pancake Bot** to your Discord server.
-2. **Login** with `/login` to set up your authentication.
-3. **Start Managing Alerts** with the provided commands.
+- `/login` – Authenticate with TradingView  
+- `/get` or `/list` – Show alert information  
+- `/remove` – Remove specific or all alerts  
+- `/orbr_alert` – Create ORBR-specific alerts
 
 ---
 
-## 💡 **Examples**
+## Getting Started
 
-- **Login to Pancake Bot:** `/login`
-- **Get Alert Information:** `/get alertID`
-- **List All Alerts:** `/list`
-- **Remove an Alert:** `/remove alertID`
-- **Set ORBR Alert:** `/orbr_alert`
+1. Invite Pancake Bot to your Discord server  
+2. Use `/login` to authenticate your TradingView account  
+3. Start managing alerts using the commands
 
 ---
 
-## 🛠 **Technologies Used**
+## Tech Stack
 
-- **Fastify:** ⚡ High-performance backend framework.
-- **Drizzle ORM:** 💾 Type-safe and lightweight ORM.
-- **Discord.js:** 🤖 Library for interacting with Discord API.
-- **Puppeteer:** 📸 Headless browser automation for advanced tasks.
-
----
-
-## 🤝 **Contributing**
-
-Contributions are welcome! Open an issue or submit a pull request to improve Pancake Bot.
+- Fastify  
+- Drizzle ORM  
+- Discord.js  
+- Puppeteer
 
 ---
 
-### 🔔 **Notes**
+## Developer Setup
 
-- Ensure the bot has permissions to manage messages and execute commands.
-- Configure webhook connections properly during login.
+- Clone project
+
+```bash
+git clone https://github.com/your-repo/pancake-bot
+cd pancake-bot
+```
+
+- Install package and migrate DB
+```bash
+pnpm install
+pnpm db:migrate
+```
 
 ---
 
-## 📄 **License**
+## License
 
-This project is licensed under the **MIT License**. See the `LICENSE` file for details.
-
----
-
-Happy Trading with **Pancake Bot**! 🥞🎉
+MIT License
